@@ -13,8 +13,10 @@
 package main;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 
 import dependencies.JavaFileMover;
+import dependencies.LinuxFileMover;
 import dependencies.SimpleFileMover;
 
 public class SimpleMoverModule extends AbstractModule {
@@ -24,9 +26,10 @@ public class SimpleMoverModule extends AbstractModule {
 	 */
 	@Override
 	protected void configure() {
-		// binds our linux file mover per default
-		bind(SimpleFileMover.class).to(JavaFileMover.class);
+		// binds our linux file mover as default
+		bind(SimpleFileMover.class).to(LinuxFileMover.class);
+		// our fallback solution with a named annotation
+		bind(SimpleFileMover.class).annotatedWith(Names.named("Fallback")).to(JavaFileMover.class);
 	}
-	
 	
 }

@@ -14,6 +14,7 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 
+
 public class JavaFileMover implements SimpleFileMover {
 
 	protected final static Logger log = Logger.getLogger(JavaFileMover.class);
@@ -25,5 +26,4 @@ public class JavaFileMover implements SimpleFileMover {
 		log.info("We're using the java method.");
 		return src.renameTo(dest);
 	}
-
 }

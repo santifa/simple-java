@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.name.Named;
 
 import dependencies.SimpleFileMover;
 
@@ -46,12 +47,10 @@ public class SimpleMover {
 	 * @param src the src
 	 * @param dest the dest
 	 */
-	public void move(File src, File dest) {
+	public boolean move(File src, File dest) {
 		boolean result = fileMover.move(src, dest);
-		log.info("The file is moved? " + result);
-		
-		// the os method doesn't work?
-		// let's switch to the java method
+		log.info("The file is moved? " + result);	
+		return result;
 	}
 
 	
@@ -80,6 +79,5 @@ public class SimpleMover {
 		log.info("dest is" + dest.getPath());
 		
 		mover.move(src, dest);
-		
 	}
 }
