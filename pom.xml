@@ -24,6 +24,6 @@
   
   <modules>
   	<module>simple-guice</module>
-  	<module>simple-sqllite</module>
+  	<module>simple-sqlite</module>
   </modules>
 </project>
