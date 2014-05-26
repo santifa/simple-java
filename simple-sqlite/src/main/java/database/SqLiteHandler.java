@@ -32,10 +32,10 @@ public class SqLiteHandler {
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(SqLiteHandler.class);
 
-	/** The active connections. */
+	/** The active connections. The concurrent map comes from junit which simultanously runs tests.*/
 	private static volatile ConcurrentHashMap<String,Connection> activeConnections = null;
 	
-	
+	/** The query time out. */
 	private static volatile int queryTimeOut = 30;
 			
 	/**
