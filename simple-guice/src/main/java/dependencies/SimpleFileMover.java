@@ -1,9 +1,9 @@
 /**
  * SimpleFileMover.java
  * A simple interface to demonstrate google guice 
- * dependency injection. To show that we use two
- * implementations to move a file. One for linux and
- * one from the Java core package.
+ * dependency injection. In order to show said injection,
+ * we implement two file mover classes. One for linux and
+ * one fallback solution using native java.
  * 
  * 
  * @author Henrik Jürges <juerges.henrik@gmail.com>

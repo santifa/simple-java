@@ -47,17 +47,17 @@ public class SqLiteHandlerTest {
 	}
 
 	@Test
-	public void testDestroyConnection() {
-		assertTrue(handler.connectToDatabaseFile("/tmp/data1.db"));
-		assertTrue(handler.destroyConnection("/tmp/data1.db"));
-		assertEquals(0, handler.getActiveConnections().size());
-	}
+		public void testCloseConnection() {
+			assertTrue(handler.connectToDatabaseFile("/tmp/data1.db"));
+			assertTrue(handler.closeConnection("/tmp/data1.db"));
+			assertEquals(0, handler.getActiveConnections().size());
+		}
 	
 	@Test
 	public void testDestroySameConnectionTwice() {
 		assertTrue(handler.connectToDatabaseFile("/tmp/data1.db"));
-		assertTrue(handler.destroyConnection("/tmp/data1.db"));
-		assertTrue(handler.destroyConnection("/tmp/data1.db"));
+		assertTrue(handler.closeConnection("/tmp/data1.db"));
+		assertTrue(handler.closeConnection("/tmp/data1.db"));
 		assertEquals(0, handler.getActiveConnections().size());
 	}
 	

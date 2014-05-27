@@ -1,8 +1,8 @@
 /**
  * SqLiteHandler.java
  * This is our SQlite database handler.
- * It manages activeConnections, creates them and 
- * destroys them for you. It's a singleton class, 
+ * It manages activeConnections, opens and 
+ * closes them for you. It's a singleton class. 
  * You can get the instance with: 
  * <code>private {@link SqLiteHandler} handler = SqLiteHandler.getInstance()</code>
  * 
@@ -32,23 +32,25 @@ public class SqLiteHandler {
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(SqLiteHandler.class);
 
-	/** The active connections. The concurrent map comes from junit which simultanously runs tests.*/
+	/** The active connections. 
+	 * The concurrent hash map is used because junit requires this 
+	 * for it's multithreaded testing enviroment.*/
 	private static volatile ConcurrentHashMap<String,Connection> activeConnections = null;
 	
 	/** The query time out. */
 	private static volatile int queryTimeOut = 30;
 			
 	/**
-	 * Instantiates a new sq lite handler.
+	 * Instantiates a new sqlite handler.
 	 *
-	 * @throws ClassNotFoundException the class not found exception
+	 * @throws ClassNotFoundException sqllite driver not found
 	 */
 	private SqLiteHandler() throws ClassNotFoundException {
 		// load JDBC Driver
 		try {
 			Class.forName("org.sqlite.JDBC");
 			
-			// initCapacity 16 - threshhold before growing 0.9, current shards (threads) 1
+			// initCapacity 16 - threshold before growing 0.9, current shards (threads) 1
 			activeConnections = new ConcurrentHashMap<String, Connection>(16, 0.9f, 1);
 		} catch (ClassNotFoundException e) {
 			log.error("JDBC driver not found");
@@ -60,7 +62,7 @@ public class SqLiteHandler {
 	 * Gets the single instance of SqLiteHandler.
 	 *
 	 * @return single instance of SqLiteHandler
-	 * @throws ClassNotFoundException the class not found exception
+	 * @throws ClassNotFoundException sqlite driver not found
 	 */
 	public static SqLiteHandler getInstance() throws ClassNotFoundException {
 		if (instance == null) {
@@ -75,9 +77,8 @@ public class SqLiteHandler {
 	 * Connect to database file.
 	 * You only have to specify the part after <code>"jdbc:sqlite:"</code>
 	 * See {@link DriverManager} for JDBC Driver for more information.
-	 * We do not check weather the connection is already open or not.
 	 *
-	 * @param database the database file
+	 * @param database the database file path
 	 * @return true, if successful
 	 */
 	public boolean connectToDatabaseFile(String database) {
@@ -127,14 +128,14 @@ public class SqLiteHandler {
 	}
 	
 	/**
-	 * Destroy a single connection.
-	 * We check if the connection exists or not, in both terms you get true returned. 
+	 * Close a single connection.
+	 * We check if the connection exists or not, in both cases true is returned. 
 	 *
 	 * @param database the database
-	 * @return true, if successful. If false is returned nevertheless we removed
-	 * the connection and left it to the garbage connection.
+	 * @return true if successful. Even if closing fails it is still removed
+	 * from the active connection hash map.
 	 */
-	public synchronized boolean destroyConnection(String database) {
+	public synchronized boolean closeConnection(String database) {
 		boolean success = false;
 		Connection connection = activeConnections.get(database);
 		
@@ -157,10 +158,10 @@ public class SqLiteHandler {
 	
 	/**
 	 * Destroys all active Connections. 
-	 * This implementation uses the destroyConnection(String database) method
-	 * so this implementation is race condition free.
+	 * This implementation uses the closeConnection(String database) method
+	 * so it is race condition free.
 	 *
-	 * @return true, if each connection successful removed.
+	 * @return true if each connection is successfully removed.
 	 */
 	public boolean destroy() {
 		Iterator<String> iter = activeConnections.keySet().iterator();	
@@ -169,7 +170,7 @@ public class SqLiteHandler {
 		while (iter.hasNext()) {
 			String key = iter.next();
 			iter.remove();
-			success = destroyConnection(key);
+			success = closeConnection(key);
 		}
 		return success;
 	}
@@ -178,9 +179,9 @@ public class SqLiteHandler {
 	 * Execute query statement, but only if the connection exits.
 	 *
 	 * @param database the database on which the query runs.
-	 * @param sqlStatement the sql statement
+	 * @param sqlStatement the query statement we execute on the database.
 	 * @return the result set for the statement or null if the connection
-	 * doesn't exits or an exception occours.
+	 * doesn't exists or an exception occurs.
 	 */
 	public ResultSet executeQueryStatement(String database, String sqlStatement) {
 		Connection connection = activeConnections.get(database);
@@ -204,8 +205,8 @@ public class SqLiteHandler {
 	 * sqlStatements array.
 	 *
 	 * @param database the database on which the update runs.
-	 * @param sqlStatements the sql statements
-	 * @return an array of ints for each update statement.
+	 * @param sqlStatements the update statement we execute on the database.
+	 * @return an array of integers for each update statement.
 	 */
 	public int[] executeUpdateStatement(String database, String[] sqlStatements) {
 		Connection connection = activeConnections.get(database);

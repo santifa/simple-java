@@ -1,9 +1,8 @@
 /**
  * SimpleMover.java
  * This is the main entry point for our guice example.
- * We "inject" the dependency which file mover we want by
- * constructing the class. In the main method we create the 
- * injector.
+ * We "inject" the correct dependency according to which file mover was chosen by
+ * constructing the class. In the main method we create the injector.
  * 
  * @author Henrik Jürges <juerges.henrik@gmail.com>
  * @version 0.1

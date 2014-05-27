@@ -1,3 +1,11 @@
+/**
+ * SimpleSQLite.java
+ * 
+ * @author Henrik Jürges <juerges.henrik@gmail.com>
+ * @version 
+ * @date 27.05.2014
+ * 
+ */
 package main;
 
 import java.sql.ResultSet;
@@ -9,14 +17,24 @@ import database.SqLiteHandler;
 
 public class SimpleSQLite {
 
+	/** The handler. */
 	private SqLiteHandler handler = null;
 	
+	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(SimpleSQLite.class);
 	
+	/**
+	 * Instantiates a new simple sqlite.
+	 *
+	 * @param handler the handler
+	 */
 	public SimpleSQLite(SqLiteHandler handler) {
 		this.handler = handler;
 	}
 	
+	/**
+	 * Execute some examples.
+	 */
 	public void executeSomeExamples() {
 		String[] stmt = {"create table person(id integer, name string)", 
 				"insert into person values (1, 'lea')", 
@@ -37,6 +55,11 @@ public class SimpleSQLite {
 			}
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		// the traditional way
 		try {
@@ -45,6 +68,5 @@ public class SimpleSQLite {
 		} catch (ClassNotFoundException e) {
 			log.error("Uii... SQLite Driver not found." + e.getMessage());
 		}
-		
 	}
 }
