@@ -1,9 +1,9 @@
 package ttd.example.money;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import ttd.example.money.Dollar;
 
 
 public class MoneyTest {
@@ -35,5 +35,10 @@ public class MoneyTest {
 	public void testCurrency() {
 		assertEquals("USD", Money.dollar(1).currency());
 		assertEquals("CHF", Money.franc(1).currency());
+	}
+	
+	@Test
+	public void testDifferentClassEquality() {
+		assertTrue(new Money(10, "CHF").equals(new Franc(10, "CHF")));
 	}
 }
