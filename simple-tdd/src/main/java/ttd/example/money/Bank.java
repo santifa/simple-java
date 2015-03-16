@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 public class Bank {
 
-	private Hashtable rates = new Hashtable<>();
+	private Hashtable<Pair, Integer> rates = new Hashtable<Pair, Integer>();
 	
 	public Money reduce(Expression source, String to) {
 		return source.reduce(this, to);

@@ -2,9 +2,9 @@ package ttd.example.money;
 
 public class Sum implements Expression {
 
-	public Expression auged;
+	Expression auged;
 	
-	public Expression addend;
+	Expression addend;
 	
 	public Sum(Expression auged, Expression addend) {
 		this.auged = auged;
@@ -17,6 +17,10 @@ public class Sum implements Expression {
 	}
 	
 	public Expression plus(Expression addend) {
-		return null;
+		return new Sum(this, addend);
+	}
+	
+	public Expression times(int multiplier) {
+		return new Sum(auged.times(multiplier), addend.times(multiplier));
 	}
 }
